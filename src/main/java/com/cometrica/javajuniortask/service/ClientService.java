@@ -3,8 +3,11 @@ package com.cometrica.javajuniortask.service;
 import com.cometrica.javajuniortask.dto.ClientDTO;
 import com.cometrica.javajuniortask.model.Client;
 import com.cometrica.javajuniortask.model.Debt;
+import com.cometrica.javajuniortask.model.Payment;
 import com.cometrica.javajuniortask.repository.ClientRepository;
 
+import com.cometrica.javajuniortask.repository.DebtRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -18,9 +21,11 @@ import java.util.stream.StreamSupport;
 @ShellComponent
 public class ClientService {
     private final ClientRepository clientRepository;
+    private final DebtRepository debtRepository;
 
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, DebtRepository debtRepository) {
         this.clientRepository = clientRepository;
+        this.debtRepository = debtRepository;
     }
 
     @ShellMethod("Shows all clients in db")
@@ -29,7 +34,10 @@ public class ClientService {
         return StreamSupport.stream(clientRepository.findAll().spliterator(), false).map(client -> {
             ClientDTO clientDTO = new ClientDTO();
             clientDTO.setName(client.getName());
-            clientDTO.setTotalDebt(client.getDebts().stream().map(Debt::getValue).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+            clientDTO.setTotalDebt(client.getDebts().stream()
+                    .map(debt -> debt.getValue().subtract(
+                            debt.getPayments().stream().map(Payment::getValue).reduce(BigDecimal.ZERO,BigDecimal::add)))
+                    .reduce(BigDecimal.ZERO,BigDecimal::add));
             return clientDTO;
         }).collect(Collectors.toList());
     }
@@ -55,6 +63,22 @@ public class ClientService {
         client.getDebts().add(debt);
         clientRepository.save(client);
         return debt.getId();
+    }
+
+    @ShellMethod("Adds payment to debt")
+    @Transactional
+    public UUID addPaymentToDebt(@ShellOption UUID debtId, @ShellOption BigDecimal value){
+        Debt debt = debtRepository.findByIdWithOptimisticForceIncLock(debtId).orElseThrow(RuntimeException::new);
+        if(debt.getPayments().stream().map(Payment::getValue).reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(value).compareTo(debt.getValue()) > 0)
+            throw new RuntimeException();
+        Payment payment = new Payment();
+        payment.setId(UUID.randomUUID());
+        payment.setDebt(debt);
+        payment.setValue(value);
+        debt.getPayments().add(payment);
+        debtRepository.save(debt);
+        return payment.getId();
     }
 
 }

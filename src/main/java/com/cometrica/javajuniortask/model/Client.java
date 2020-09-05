@@ -19,7 +19,6 @@ public class Client {
     @Id
     private UUID id;
     private String name;
-
     @OneToMany(mappedBy = "client")
     @Cascade(CascadeType.ALL)
     List<Debt> debts = new LinkedList<>();

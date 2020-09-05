@@ -20,3 +20,7 @@ public class JavaJuniorTaskApplication {
         return () -> new AttributedString("junior-task:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
     }
 }
+
+
+//todo lock debt while adding payment
+//todo (cID,dID,pID)+simpleQuery || (dID,pID)+complexQuery
