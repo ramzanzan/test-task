@@ -1,0 +1,27 @@
+openapi: "3.0.2"
+info:
+  title: Java Junior Task API
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /clients/summary:
+    get:
+      responses:
+        '200':
+          description: OK
+  /clients:
+    post:
+      responses:
+        '200':
+          description: OK
+  /debts:
+    post:
+      responses:
+        '200':
+          description: OK
+  /payments:
+    post:
+      responses:
+        '200':
+          description: OK
