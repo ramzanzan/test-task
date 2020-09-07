@@ -2,6 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 spring-shell.log
 /**/_/
+/**/openapi.yaml
 
 ### STS ###
 .apt_generated

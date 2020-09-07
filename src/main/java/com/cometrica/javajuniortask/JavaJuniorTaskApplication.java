@@ -21,6 +21,3 @@ public class JavaJuniorTaskApplication {
     }
 }
 
-
-//todo lock debt while adding payment
-//todo (cID,dID,pID)+simpleQuery || (dID,pID)+complexQuery

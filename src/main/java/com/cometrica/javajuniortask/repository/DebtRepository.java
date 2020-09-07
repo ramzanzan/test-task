@@ -5,8 +5,8 @@ import com.cometrica.javajuniortask.model.Debt;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -15,7 +15,11 @@ import javax.persistence.LockModeType;
 
 @Repository
 public interface DebtRepository extends CrudRepository<Debt, UUID> {
+
+    @Transactional
+    @Query("select d from Debt d where d.id=?1")
+//    can't be used because of bug in hibernate
+//    @EntityGraph(attributePaths = "payments")
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
-    @Query("select d from Debt d where d.id=:id")
-    Optional<Debt> findByIdWithOptimisticForceIncLock(@Param("id") UUID id);
+    Optional<Debt> findByIdWithOptimisticForceIncrementLock(UUID id);
 }
