@@ -39,7 +39,7 @@ public class ClientController {
         return dto;
     }
 
-    @GetMapping(value = "summaries",
+    @GetMapping(value = "",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public PagedModel<EntityModel<ClientDTO>> getAllClientSummaries(Pageable pageable, PagedResourcesAssembler<ClientDTO> assembler){
