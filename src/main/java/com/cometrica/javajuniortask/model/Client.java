@@ -10,9 +10,9 @@ import javax.persistence.*;
 
 import lombok.Data;
 
-@Entity
 @Data
 @EqualsAndHashCode(exclude = "debts")
+@Entity
 @Table(name = "clients")
 public class Client {
     @Id
@@ -24,3 +24,5 @@ public class Client {
     @Cascade(CascadeType.ALL)
     Set<Debt> debts = new HashSet<>();
 }
+
+

@@ -11,9 +11,9 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-@Entity
 @Data
 @EqualsAndHashCode(exclude = {"client","payments"})
+@Entity
 @Table(name = "debts")
 public class Debt {
     @Id
@@ -31,6 +31,7 @@ public class Debt {
     private Set<Payment> payments = new HashSet<>();
 
     @Version
+    @Column(nullable = false)
     private Integer version;
 
 }

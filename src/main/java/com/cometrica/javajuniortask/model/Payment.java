@@ -3,21 +3,23 @@ package com.cometrica.javajuniortask.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
-@Entity
 @Data
 @EqualsAndHashCode(exclude = "debt")
+@Entity
+@Table(name = "payments")
 public class Payment {
     @Id
     private UUID id;
+
+    @Column(nullable = false)
     private BigDecimal value;
-    @ManyToOne
+
+    @ManyToOne(optional = false)
     private Debt debt;
 }

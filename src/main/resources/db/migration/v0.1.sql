@@ -14,5 +14,23 @@ create table debts
     client_id   uuid    not null,
     constraint client_id_fk foreign key(client_id) references clients on delete cascade,
     constraint value_gt_zero check (value>0)
-)
+);
+
+--changeset ma:v0.1.1
+alter table debts drop constraint value_gt_zero;
+
+alter table debts
+    add constraint debts_value_gt_0 check (value>0);
+
+alter table debts
+    add column version integer not null default 0;
+
+create table payments
+(
+    id      uuid        primary key,
+    value   numeric     not null,
+    debt_id uuid        not null,
+    constraint debt_id_fk foreign key(debt_id) references debts on delete cascade,
+    constraint payments_value_gt_0 check (value>0)
+);
 
