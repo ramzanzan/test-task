@@ -6,18 +6,19 @@ import org.hibernate.annotations.CascadeType;
 
 import java.util.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.Data;
 
 @Entity
 @Data
 @EqualsAndHashCode(exclude = "debts")
+@Table(name = "clients")
 public class Client {
     @Id
     private UUID id;
+
+    @Column(length = 128)
     private String name;
     @OneToMany(mappedBy = "client")
     @Cascade(CascadeType.ALL)
