@@ -63,6 +63,7 @@ public class ClientController {
     public PaymentDTO addPaymentToDebt(@RequestParam("debt_id") UUID debtId, @RequestParam("value") BigDecimal value){
         Payment payment = clientService.addPaymentToDebt(debtId,value);
         PaymentDTO dto = new PaymentDTO();
+        BeanUtils.copyProperties(payment,dto);
         return dto;
     }
 }
