@@ -42,6 +42,10 @@ public class ClientService {
                 });
     }
 
+    /***
+     * @param name name.length() must be > 0
+     * @return
+     */
     @Transactional
     public Client addClient(String name) {
         Client client = new Client();

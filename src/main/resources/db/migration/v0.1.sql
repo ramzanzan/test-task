@@ -34,3 +34,7 @@ create table payments
     constraint payments_value_gt_0 check (value>0)
 );
 
+--changeset ma:v0.1.2
+alter table clients
+    add constraint clients_name_len_gt_0 check (length(name)>1);
+
