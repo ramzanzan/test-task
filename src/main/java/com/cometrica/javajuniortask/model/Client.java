@@ -7,17 +7,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "clients")
 public class Client {
     @Id
     private UUID id;
+
+    @Column(length = 128)
     private String name;
 
     @OneToMany(mappedBy = "client")
