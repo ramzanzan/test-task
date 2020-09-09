@@ -28,10 +28,10 @@ public class PageableValidator implements ConstraintValidator<PageableConstraint
         if(pg.isUnpaged()) return constraint.allowUnpaged();
         if(pg.getPageSize()<constraint.minSize() || pg.getPageSize()>constraint.maxSize()) return false;
         if(constraint.orders().length != 0){
-            HashMap<String, SortPropertyConstraint> socs = new HashMap<>();
-            for(SortPropertyConstraint soc : constraint.orders()) socs.put(soc.value(),soc);
+            HashMap<String, SortPropertyConstraint> spcs = new HashMap<>();
+            for(SortPropertyConstraint spc : constraint.orders()) spcs.put(spc.value(),spc);
             for(Sort.Order order: pg.getSort()){
-                SortPropertyConstraint soc = socs.get(order.getProperty());
+                SortPropertyConstraint soc = spcs.get(order.getProperty());
                 if( soc==null || !soc.direction().testCompliance(order.getDirection())
                         || (order.isIgnoreCase() && !soc.ignoreCase()) )
                     return false;
