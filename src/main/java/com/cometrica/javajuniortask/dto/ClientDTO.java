@@ -3,7 +3,6 @@ package com.cometrica.javajuniortask.dto;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

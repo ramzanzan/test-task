@@ -7,6 +7,9 @@ import com.cometrica.javajuniortask.model.Client;
 import com.cometrica.javajuniortask.model.Debt;
 import com.cometrica.javajuniortask.model.Payment;
 import com.cometrica.javajuniortask.service.ClientService;
+
+import com.cometrica.javajuniortask.validation.PageableConstraint;
+import com.cometrica.javajuniortask.validation.SortPropertyConstraint;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +17,19 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping(
+        value = "/clients",
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
+@Validated
 public class ClientController {
 
     private final ClientService clientService;
@@ -29,42 +38,38 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping(value = "",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ClientDTO addClient(@RequestParam("name") String name){
+    @PostMapping(value = "")
+    public ClientDTO addClient(@RequestParam("client_name") String name){
         Client client = clientService.addClient(name);
         ClientDTO dto = new ClientDTO();
         BeanUtils.copyProperties(client,dto);
+        dto.setTotalDebt(BigDecimal.ZERO);
         return dto;
     }
 
-    @GetMapping(value = "",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public PagedModel<EntityModel<ClientDTO>> getAllClientSummaries(Pageable pageable, PagedResourcesAssembler<ClientDTO> assembler){
+    @GetMapping(value = "")
+    public PagedModel<EntityModel<ClientDTO>> getAllClientSummaries(@PageableConstraint(maxSize = 100, orders = {@SortPropertyConstraint("id"),@SortPropertyConstraint("name")})
+                                                                        Pageable pageable,
+                                                                    PagedResourcesAssembler<ClientDTO> assembler){
         Page<ClientDTO> page = clientService.getAllClientSummaries(pageable);
         return assembler.toModel(page);
     }
 
-    @PostMapping(value = "debts",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public DebtDTO addDebtToClient(@RequestParam("client_id") UUID clientId, @RequestParam("value") BigDecimal value){
+    @PostMapping(value = "debts")
+    public DebtDTO addDebtToClient(@RequestParam("client_id") UUID clientId,
+                                   @Positive(message = "debt_value must be > 0") @RequestParam("debt_value") BigDecimal value){
         Debt debt = clientService.addDebtToClient(clientId,value);
         DebtDTO dto = new DebtDTO();
         BeanUtils.copyProperties(debt,dto);
         return dto;
     }
 
-    @PostMapping(value = "debts/payments",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public PaymentDTO addPaymentToDebt(@RequestParam("debt_id") UUID debtId, @RequestParam("value") BigDecimal value){
+    @PostMapping(value = "debts/payments")
+    public PaymentDTO addPaymentToDebt(@RequestParam("debt_id") UUID debtId,
+                                       @Positive(message = "payment_value must be > 0") @RequestParam("payment_value") BigDecimal value){
         Payment payment = clientService.addPaymentToDebt(debtId,value);
         PaymentDTO dto = new PaymentDTO();
         BeanUtils.copyProperties(payment,dto);
         return dto;
     }
 }
-//todo valid
