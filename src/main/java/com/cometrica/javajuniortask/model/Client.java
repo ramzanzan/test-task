@@ -18,7 +18,7 @@ public class Client {
     @Id
     private UUID id;
 
-    @Column(length = 128)
+    @Column(nullable = false, length = 128)
     @Length(min = 1, max = 128)
     private String name;
 
