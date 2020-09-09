@@ -1,0 +1,295 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: "http://lh:8080"
+    description: Generated server url
+paths:
+  /clients:
+    get:
+      tags:
+        - client-controller
+      operationId: getAllClientSummaries
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          schema:
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          schema:
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc)(,ignoreCase). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagedClientDTO"
+    post:
+      tags:
+        - client-controller
+      operationId: addClient
+      parameters:
+        - name: client_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDTO"
+  /clients/debts:
+    post:
+      tags:
+        - client-controller
+      operationId: addDebtToClient
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: debt_value
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DebtDTO"
+  /clients/debts/payments:
+    post:
+      tags:
+        - client-controller
+      operationId: addPaymentToDebt
+      parameters:
+        - name: debt_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: payment_value
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentDTO"
+components:
+  schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+          format: int32
+        errors:
+          type: array
+          items:
+            type: string
+    ClientDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        totalDebt:
+          type: number
+    DebtDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          type: number
+    PaymentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          type: number
+    Links:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/Link"
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int64
+    PagedClientDTO:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            clientDToes:
+              type: array
+              items:
+                $ref: "#/components/schemas/ClientDTO"
+        _links:
+          $ref: "#/components/schemas/Links"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean
+
