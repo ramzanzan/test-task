@@ -17,7 +17,7 @@ public class PageableValidator implements ConstraintValidator<PageableConstraint
         if(constraint.minSize() < 1)
             throw new IllegalArgumentException("minSize can't be < 1");
         if(constraint.maxSize() < 0)
-            throw new IllegalArgumentException("maxSize or minPage or maxPage can't be < 0");
+            throw new IllegalArgumentException("maxSize can't be < 0");
         if(constraint.minSize() > constraint.maxSize())
             throw new IllegalArgumentException("minSize can't be > maxSize");
 
