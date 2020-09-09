@@ -31,9 +31,9 @@ public class PageableValidator implements ConstraintValidator<PageableConstraint
             HashMap<String, SortPropertyConstraint> spcs = new HashMap<>();
             for(SortPropertyConstraint spc : constraint.orders()) spcs.put(spc.value(),spc);
             for(Sort.Order order: pg.getSort()){
-                SortPropertyConstraint soc = spcs.get(order.getProperty());
-                if( soc==null || !soc.direction().testCompliance(order.getDirection())
-                        || (order.isIgnoreCase() && !soc.ignoreCase()) )
+                SortPropertyConstraint spc = spcs.get(order.getProperty());
+                if( spc==null || !spc.direction().testCompliance(order.getDirection())
+                        || (order.isIgnoreCase() && !spc.ignoreCase()) )
                     return false;
             }
         }
