@@ -10,19 +10,27 @@ import com.cometrica.javajuniortask.service.ClientService;
 
 import com.cometrica.javajuniortask.validation.PageableConstraint;
 import com.cometrica.javajuniortask.validation.SortPropertyConstraint;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.function.Function;
 
 @RestController
 @RequestMapping(
@@ -48,9 +56,10 @@ public class ClientController {
     }
 
     @GetMapping(value = "")
+    @PageableAsQueryParam
     public PagedModel<EntityModel<ClientDTO>> getAllClientSummaries(@PageableConstraint(maxSize = 100, orders = {@SortPropertyConstraint("id"),@SortPropertyConstraint("name")})
-                                                                        Pageable pageable,
-                                                                    PagedResourcesAssembler<ClientDTO> assembler){
+                                                                    @Parameter(hidden = true) Pageable pageable,
+                                                                    @Parameter(hidden = true) PagedResourcesAssembler<ClientDTO> assembler){
         Page<ClientDTO> page = clientService.getAllClientSummaries(pageable);
         return assembler.toModel(page);
     }

@@ -21,9 +21,6 @@ public @interface PageableConstraint {
     int minSize() default 20;
     int maxSize() default 20;
 
-    int minPage() default 0;
-    int maxPage() default Integer.MAX_VALUE;
-
     SortPropertyConstraint[] orders() default {};
 
     boolean allowUnpaged() default false;
