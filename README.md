@@ -1,9 +1,3 @@
-
-## Prerequisites
-
-1. Maven
-1. Java 8
-
 ## Technological stack
 
 1. JPA (Hibernate) as a persistence layer
@@ -11,13 +5,9 @@
 
 
 ## Quick start
-
-1. Clone this repo to your computer.
 1. Run `mvn spring-boot:run` to quick start this project.
 
-This project should be easily picked up by your favorite IDE (as it only depends on Maven as a build tool).
-Now you're ready to rumble!
-
+Now you can use CLI or web-uo on http://localhost:9090/ui.html
 
 ![commands](/commands.jpeg)
 
@@ -32,10 +22,10 @@ Now you're ready to rumble!
 
 ## Additional tasks
 
-1. Write some unit test
 1. Database creation through flyway or liquibase (now it's done through hibernate autoddl)
 1. It would be great if you'll make web client (ui) for rest points you've made previously.
 
 ## License
-
 This project is licensed under the MIT license.
+
+
